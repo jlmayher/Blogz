@@ -50,7 +50,10 @@ def new_post():
             blog = Blog(blog_title, blog_body)
             db.session.add(blog)
             db.session.commit()
-            return redirect('/blog')
+            
+            id = blog.id
+            id_str = str(id)
+            return redirect('/blog?id=' + id_str)
 
         else:
             return render_template('post.html', blog_title=blog_title, title_error=title_error, blog_body=blog_body, body_error=body_error)
