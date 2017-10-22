@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Sign up for Awesome Blog</h2>
+<form action="/signup" method="POST">
+    <p><label>Choose a username:<input type="text" name="username"/></label></p>
+    <p><label>Enter a password:<input type="password" name="password"/></label></p>
+    <p><label>Renter password:<input type="password" name="validate"/></label></p>
+    <p><input type="submit" value="Sign up"/></p>
+</form>
+
+
+{% endblock %}

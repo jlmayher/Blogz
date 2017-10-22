@@ -7,7 +7,27 @@
         <title>Awesome Blog</title>
     </head>
     <body>
-        <h1>Awesome Blog: Your home for awesome stuff!</h1>
+        <div style='float: right'>
+            {% if 'user' in session %}
+                {{ session['user'] }}
+                <form action="/logout" method="post" id='logout'>
+                    <input type="submit" value="Log Out" />
+                </form>
+            {% else %}
+                <a href="login">login</a> | <a href="register">register</a>
+            {% endif %}
+        </div>
+        <h1><a href="/">Awesome Blog: Your home for awesome stuff!</a></h1>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% endwith %}
+
         <a href="/blog">View All Blogs</a></br><a href="/newpost">Add a New Entry</a>
         {% block content %}
         {% endblock %}
