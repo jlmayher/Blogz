@@ -2,7 +2,9 @@
 <html>
     <head>
         <style>
-            
+            .title{
+                font-size: 20px;
+            }
         </style>
         <title>Awesome Blog</title>
     </head>
@@ -14,10 +16,10 @@
                     <input type="submit" value="Log Out" />
                 </form>
             {% else %}
-                <a href="login">login</a> | <a href="register">register</a>
+                <a href="login">Login</a> | <a href="signup">Signup</a>
             {% endif %}
         </div>
-        <h1><a href="/">Awesome Blog: Your home for awesome stuff!</a></h1>
+        <h1>Awesome Blog: Your home for awesome stuff!</h1>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
           <ul class=flashes>
@@ -27,8 +29,7 @@
           </ul>
         {% endif %}
         {% endwith %}
-
-        <a href="/blog">View All Blogs</a></br><a href="/newpost">Add a New Entry</a>
+        <a href="/">Home</a>  <a href="/blog">View All Blogs</a>  <a href="/newpost">Add a New Entry</a>
         {% block content %}
         {% endblock %}
     </body>

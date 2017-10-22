@@ -33,7 +33,7 @@ class User(db.Model):
 
 @app.before_request  
 def require_login():
-    allowed_routes = ['login', 'signup']
+    allowed_routes = ['login', 'signup', 'blog', 'index']
     if request.endpoint not in allowed_routes and 'user' not in session:
         return redirect('/login')
 
@@ -84,46 +84,54 @@ def login():
     else:
         return render_template('login.html')
 
+@app.route('/')
+def index():
+    users = User.query.all()
+    return render_template('index.html', users=users)
 
 @app.route('/blog')
-def index():
+def blog():
     id = request.args.get('id')
+    user = request.args.get('user')
+    
     if id:
         display = Blog.query.get(id)
+               
         return render_template('display.html', blog=display)
+    if user:
+        user_obj = User.query.filter_by(id=user).first()
+        blogs = Blog.query.filter_by(owner_id=user).all()
+        #display = Blog.query.filter_by(owner=user).all() 
+        return render_template('userentries.html', user=user_obj, blogs=blogs)
     else:
         blogs = Blog.query.all()
-        return render_template('index.html', blogs=blogs)
+        return render_template('blogs.html', blogs=blogs)
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def new_post():
     if request.method == 'POST':
+        owner = User.query.filter_by(username=session['user']).first()
         blog_title = request.form['blog-title']
         blog_body = request.form['blog-text']
 
-        title_error = ""
-        body_error = ""
-
+        
         if blog_title == "":
-            title_error = "Your new entry needs a title."
-            blog_title = ""
+            flash("Your new entry needs a title.")
+            return redirect('/newpost')
     
         if blog_body == "":
-            body_error = "Your entry is blank. What did you want to say?"
-            blog_body = ""
+            flash("Your new entry needs some content.")
+            return redirect('newpost')
 
  
-        if not title_error and not body_error:
-            blog = Blog(blog_title, blog_body)
-            db.session.add(blog)
-            db.session.commit()
+        
+        blog = Blog(blog_title, blog_body, owner)
+        db.session.add(blog)
+        db.session.commit()
             
-            id = blog.id
-            id_str = str(id)
-            return redirect('/blog?id=' + id_str)
-
-        else:
-            return render_template('post.html', blog_title=blog_title, title_error=title_error, blog_body=blog_body, body_error=body_error)
+        id = blog.id
+        id_str = str(id)
+        return redirect('/blog?id=' + id_str)
 
     else:
         return render_template('post.html')
