@@ -4,6 +4,7 @@
 
 <h2>Blogs by {{user.username}}</h2>
 {% for blog in blogs %}
-    <li><a href="./blog?id={{blog.id}}">{{blog.title}}</li>
+    <a href="./blog?id={{blog.id}}">{{blog.title}}</a>
+    <p>{{blog.body}}</p>
 {% endfor %}
 {% endblock %}
