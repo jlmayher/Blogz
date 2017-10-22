@@ -46,20 +46,27 @@ def signup():
 
         
         existing_user = User.query.filter_by(username=username).first()
+        if username == "" or password == "" or validate == "":
+            flash("One or more fields are invalid.")
+            return redirect('/signup')
         if existing_user:
             flash('This username is already in use.')
-            return redirect('/register')
+            return redirect('/signup')
         if password != validate:
             flash('Passwords must match')
-        if len(username) < 3 or len(password) < 3:
-            flash('Username and password must be at least 3 characters long.')
-            return redirect('/register')
+            return redirect('/signup')
+        if len(username) < 3:
+            flash('Invalid username. Username must be at least 3 characters long.')
+            return redirect('/signup')
+        if len(password) < 3:
+            flash('Invalid password. Password must be at least 3 characters long.')
+            return redirect('/signup')
         
         new_user = User(username, password)
         db.session.add(new_user)
         db.session.commit()
         session['user'] = username
-        return redirect('/blog')
+        return redirect('/newpost')
     
     else:
         return render_template('signup.html')
@@ -74,7 +81,7 @@ def login():
         if user and user.password == password:
             session['user'] = username
             flash("Logged In")
-            return redirect('/blog')
+            return redirect('/newpost')
         if user and user.password != password:
             flash('Password is incorrect.')
             return redirect('/login')
